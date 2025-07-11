@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "LeetCode Problem Link Helper",
+  "version": "1.0",
+  "description": "Automatically detects coding problems and provides LeetCode links",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "contextMenus"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["*://*/*"],
+      "js": ["content.js"],
+      "css": ["styles.css"]
+    }
+  ],
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "LeetCode Helper"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["leetcode-data.json"],
+      "matches": ["*://*/*"]
+    }
+  ],
+  "host_permissions": ["https://takeuforward.org/*"]
+}
