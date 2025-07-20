@@ -3,7 +3,11 @@
   "name": "LeetCode Problem Link Helper",
   "version": "1.0",
   "description": "Automatically detects coding problems and provides LeetCode links",
-  "permissions": ["activeTab", "storage"],
+  "permissions": [
+    "activeTab",
+    "storage",
+    "tabs"
+  ],
   "content_scripts": [
     {
       "matches": ["*://*/*"],

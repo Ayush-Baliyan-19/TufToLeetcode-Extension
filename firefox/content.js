@@ -43,14 +43,23 @@ function calculateSimilarity(str1, str2) {
     return intersection.size / union.size;
 }
 
+let SIMILARITY_THRESHOLD = 0.4;
+
+// Load threshold from localStorage if available
+if (typeof localStorage !== 'undefined') {
+    const stored = localStorage.getItem('leetcode-helper-similarity-threshold');
+    if (stored) {
+        SIMILARITY_THRESHOLD = parseFloat(stored);
+    }
+}
+
 // Function to find matching LeetCode problems (similar matches)
 function findMatchingProblems(pageText) {
     const normalizedPageText = normalizeText(pageText);
     console.log('Normalized page text preview:', normalizedPageText);
 
     const matches = [];
-    const SIMILARITY_THRESHOLD = 0.4; // Adjust this value to control match sensitivity
-
+    // Use the global SIMILARITY_THRESHOLD
     for (let i = 0; i < leetcodeData.length; i++) {
         const problem = leetcodeData[i];
         const similarity = calculateSimilarity(pageText, problem.title);
@@ -194,8 +203,41 @@ function createTitleButton() {
     return titleButton;
 }
 
-// Function to inject the title button
+let visibilityEnabled = true;
+if (typeof localStorage !== 'undefined') {
+    const storedVisibility = localStorage.getItem('leetcode-helper-visibility-enabled');
+    if (storedVisibility !== null) {
+        visibilityEnabled = storedVisibility === 'true';
+    }
+}
+
+function removeTitleButton() {
+    const titleElement = document.querySelector('.text-2xl.font-bold.text-new_primary.dark\\:text-new_dark_primary.relative');
+    if (titleElement) {
+        const btn = titleElement.querySelector('.leetcode-helper-title-btn');
+        if (btn) btn.remove();
+    }
+}
+
+function hidePopup() {
+    if (buttonContainer) {
+        buttonContainer.style.display = 'none';
+    }
+}
+
+function showPopup() {
+    if (buttonContainer && buttonContainer.innerHTML.trim() !== '') {
+        buttonContainer.style.display = 'block';
+    }
+}
+
+// Update injectTitleButton to respect visibilityEnabled
 function injectTitleButton() {
+    if (!visibilityEnabled) {
+        removeTitleButton();
+        hidePopup();
+        return;
+    }
     const titleElement = document.querySelector('.text-2xl.font-bold.text-new_primary.dark\\:text-new_dark_primary.relative');
     if (titleElement && !titleElement.querySelector('.leetcode-helper-title-btn')) {
         const titleButton = createTitleButton();
@@ -317,11 +359,30 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 
     if (request.action === 'toggle') {
-        if (buttonContainer) {
-            const isVisible = buttonContainer.style.display !== 'none';
-            buttonContainer.style.display = isVisible ? 'none' : 'block';
-            sendResponse({ success: true, visible: !isVisible });
+        visibilityEnabled = !visibilityEnabled;
+        if (typeof localStorage !== 'undefined') {
+            localStorage.setItem('leetcode-helper-visibility-enabled', visibilityEnabled);
         }
+        if (!visibilityEnabled) {
+            removeTitleButton();
+            hidePopup();
+        } else {
+            injectTitleButton();
+        }
+        sendResponse({ success: true, visible: visibilityEnabled });
+    }
+
+    if (request.action === 'setSimilarityThreshold') {
+        SIMILARITY_THRESHOLD = parseFloat(request.value);
+        if (typeof localStorage !== 'undefined') {
+            localStorage.setItem('leetcode-helper-similarity-threshold', SIMILARITY_THRESHOLD);
+        }
+        console.log('Updated SIMILARITY_THRESHOLD to', SIMILARITY_THRESHOLD);
+        sendResponse({ success: true });
+    }
+
+    if (request.action === 'getSimilarityThreshold') {
+        sendResponse({ value: SIMILARITY_THRESHOLD });
     }
 });
 

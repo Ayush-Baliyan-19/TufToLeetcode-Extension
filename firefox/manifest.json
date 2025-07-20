@@ -28,5 +28,11 @@
       "matches": ["*://*/*"]
     }
   ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "tuf-to-leetcode@ayushbaliyan.dev",
+      "strict_min_version": "109.0"
+    }
+  },
   "host_permissions": ["https://takeuforward.org/*"]
 }
