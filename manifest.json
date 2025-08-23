@@ -1,16 +1,22 @@
 {
   "manifest_version": 3,
-  "name": "LeetCode Problem Link Helper",
+  "name": "TUF to LC",
   "version": "1.0",
-  "description": "Automatically detects coding problems and provides LeetCode links",
+  "description": "Detects coding problems on TUF and provides LeetCode links if available",
   "permissions": [
     "activeTab",
     "storage",
     "tabs"
   ],
+  "icons": {
+    "16": "icons/T2L-16.png",
+    "32": "icons/T2L-32.png", 
+    "48": "icons/T2L-48.png",
+    "128": "icons/T2L-128.png"
+  },
   "content_scripts": [
     {
-      "matches": ["*://*/*"],
+      "matches": ["https://takeuforward.org/*"],
       "js": ["content.js"],
       "css": ["styles.css"]
     }
@@ -20,12 +26,12 @@
   },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "LeetCode Helper"
+    "default_title": "TUF to LC"
   },
   "web_accessible_resources": [
     {
       "resources": ["leetcode-data.json"],
-      "matches": ["*://*/*"]
+      "matches": ["https://takeuforward.org/*"]
     }
   ],
   "host_permissions": ["https://takeuforward.org/*"]

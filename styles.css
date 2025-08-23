@@ -1,43 +1,37 @@
-/* LeetCode Helper Extension Styles */
-
-.leetcode-helper-floating {
+#leetcode-helper-container {
   position: fixed;
   top: 20px;
   right: 20px;
-  z-index: 10000;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  width: 500px;
+  max-height: 80vh;
+  background: #1e1e1e;
+  border: 1px solid #333333;
   border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  min-width: 280px;
-  max-width: 350px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  z-index: 10000;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   animation: slideIn 0.3s ease-out;
 }
 
 @keyframes slideIn {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
 }
 
 .leetcode-helper-header {
+  background: linear-gradient(135deg, #000000 40%, #ff8c00 100%);
+  color: white;
+  padding: 12px 16px;
+  font-weight: 600;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
   border-radius: 12px 12px 0 0;
-  color: white;
   font-size: 14px;
-  font-weight: 600;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .close-btn {
@@ -57,22 +51,112 @@
 }
 
 .close-btn:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.loading-container {
+  padding: 24px;
+  text-align: center;
+  color: #b0b0b0; 
+  background: #1e1e1e;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #404040;
+  border-top: 3px solid #808080; 
+  border-radius: 50%;
+  margin: 0 auto 16px auto;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text p {
+  margin: 8px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #b0b0b0; 
+}
+
+.loading-subtext {
+  font-size: 12px !important;
+  opacity: 0.6;
+  font-weight: 400 !important;
+  color: #888888; 
+}
+
+.loading-progress {
+  margin-top: 20px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 4px;
+  background: #404040;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #808080; 
+  border-radius: 2px;
+  animation: progressFill 2s ease-in-out infinite;
+}
+
+@keyframes progressFill {
+  0% { width: 0%; }
+  50% { width: 100%; }
+  100% { width: 0%; }
+}
+
+.results-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+  max-height: calc(80vh - 60px);
+}
+
+.results-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.results-content::-webkit-scrollbar-track {
+  background: #404040; 
+  border-radius: 4px;
+}
+
+.results-content::-webkit-scrollbar-thumb {
+  background: #606060; 
+  border-radius: 4px;
+}
+
+.results-content::-webkit-scrollbar-thumb:hover {
+  background: #707070; 
 }
 
 .leetcode-helper-btn {
   width: 100%;
-  background: rgba(255, 255, 255, 0.9);
   border: none;
+  background: #1e1e1e;
   padding: 12px 16px;
-  margin: 0;
+  text-align: left;
   cursor: pointer;
+  border-bottom: 1px solid #404040; 
   transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  font-family: inherit;
+  position: relative;
+  display: block;
+}
+
+.leetcode-helper-btn:hover {
+  background: #2a2a2a;
+  transform: translateX(2px);
 }
 
 .leetcode-helper-btn:last-child {
@@ -80,22 +164,16 @@
   border-radius: 0 0 12px 12px;
 }
 
-.leetcode-helper-btn:hover {
-  background: rgba(255, 255, 255, 1);
-  transform: translateX(2px);
-  box-shadow: inset 0 0 0 2px #667eea;
-}
-
 .btn-content {
-  flex: 1;
-  text-align: left;
+  position: relative;
+  padding-right: 30px;
 }
 
 .btn-title {
-  font-size: 14px;
   font-weight: 600;
-  color: #2d3748;
-  margin-bottom: 4px;
+  font-size: 14px;
+  color: #ffffff;
+  margin-bottom: 6px;
   line-height: 1.2;
 }
 
@@ -103,112 +181,101 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 12px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
 }
 
-.difficulty {
+.btn-topics-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+.difficulty, .match-percent, .topic-tag, .sql-badge, .premium-badge {
   padding: 2px 8px;
   border-radius: 12px;
+  font-size: 11px;
   font-weight: 500;
   text-transform: uppercase;
-  font-size: 11px;
 }
 
 .difficulty.easy {
-  background-color: #d4edda;
-  color: #155724;
+  background: #2d5a41; 
+  color: #ffffff;
 }
 
 .difficulty.medium {
-  background-color: #fff3cd;
-  color: #856404;
+  background: #b8860b; 
+  color: #ffffff;
 }
 
 .difficulty.hard {
-  background-color: #f8d7da;
-  color: #721c24;
+  background: #b22222;
+  color: #ffffff;
 }
 
-.match-type {
-  background-color: #d4edda;
-  color: #155724;
-  padding: 2px 6px;
-  border-radius: 8px;
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
+.desc-match {
+  background: #2d5a41;
+  color: #ffffff;
+}
+
+.title-match {
+  background: #b8860b; 
+  color: #ffffff;
+}
+
+.topic-tag {
+  background: #5a5a5a; 
+  color: #cacaca;
+}
+
+.sql-badge {
+  background: #2e86ab; 
+  color: #ffffff;
+}
+
+.premium-badge {
+  background: #d2691e; 
+  color: #f0f0f0;
+}
+
+.total-match {
+  background: linear-gradient(135deg, #000000 40%, #ff8c00 100%);
+  color: #ffffff;
 }
 
 .btn-arrow {
-  color: #667eea;
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
   font-size: 16px;
+  color: #808080; 
   font-weight: bold;
-  margin-left: 8px;
   transition: transform 0.2s;
 }
 
 .leetcode-helper-btn:hover .btn-arrow {
-  transform: translateX(2px);
+  transform: translateY(-50%) translateX(2px);
+  color: #ffffff;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .leetcode-helper-floating {
-    right: 10px;
-    top: 10px;
-    min-width: 260px;
-    max-width: calc(100vw - 20px);
-  }
-}
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  .leetcode-helper-btn {
-    background: rgba(45, 55, 72, 0.95);
-    color: white;
-  }
-
-  .btn-title {
-    color: #f7fafc;
-  }
-
-  .leetcode-helper-btn:hover {
-    background: rgba(45, 55, 72, 1);
-  }
-}
-
-/* Animation for when no matches found */
 .no-matches {
-  padding: 16px;
+  padding: 24px;
   text-align: center;
-  color: rgba(255, 255, 255, 0.8);
+  color: #888888; 
+}
+
+.no-matches p {
+  margin: 8px 0;
   font-size: 14px;
 }
 
-/* Loading state */
-.loading {
-  padding: 16px;
-  text-align: center;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 14px;
-}
-
-.loading::after {
-  content: "";
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  border-top-color: white;
-  animation: spin 1s linear infinite;
-  margin-left: 8px;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+.no-matches-subtext {
+  font-size: 12px !important;
+  opacity: 0.6;
+  color: #666666; 
 }
 
 .leetcode-helper-title-btn {
@@ -216,17 +283,79 @@
   border: none;
   cursor: pointer;
   font-size: 1.2rem;
-  margin-left: 10px;
+  margin-left: 8px;
   padding: 2px 6px;
   border-radius: 4px;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
   vertical-align: middle;
 }
 
 .leetcode-helper-title-btn:hover {
-  background-color: rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.08); 
+  transform: scale(1.1);
 }
 
-.dark .leetcode-helper-title-btn:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+@media (max-width: 768px) {
+  #leetcode-helper-container {
+    width: calc(100vw - 20px);
+    right: 10px;
+    top: 10px;
+  }
+}
+
+.btn-desc,
+.btn-topics,
+.btn-match-details,
+.primary-match-desc,
+.primary-match-title,
+.match-detail {
+  display: none !important;
+}
+
+
+.total-match {
+  background: linear-gradient(135deg, #000000 40%, #ff8c00 100%);
+  color: #ffffff;
+}
+
+.premium-problem {
+  background: linear-gradient(135deg, #000000 40%, #ff8c00 100%) !important;
+  color: white !important;
+  border: 2px solid #ff8c00 !important;
+}
+
+.premium-problem .btn-title {
+  color: #ffffff !important;
+}
+
+.premium-problem .btn-arrow {
+  color: #ffffff !important;
+}
+
+.premium-problem:hover {
+  background: linear-gradient(135deg, #1a1a1a 40%, #ff9500 100%) !important;
+  transform: translateX(4px) !important;
+  box-shadow: 0 4px 12px rgba(255, 140, 0, 0.3) !important;
+}
+
+.btn-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px; 
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.difficulty, .match-percent, .topic-tag, .sql-badge, .premium-badge {
+  padding: 2px 6px;
+  border-radius: 12px;
+  font-size: 10px; 
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.premium-problem .premium-badge {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }

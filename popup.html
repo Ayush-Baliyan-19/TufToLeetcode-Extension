@@ -6,44 +6,109 @@
     <title>LeetCode Helper</title>
     <style>
       body {
-        width: 300px;
+        width: 320px;
         padding: 16px;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-          sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: linear-gradient(135deg, #000000 40%, #ff8c00 100%);
         color: white;
         margin: 0;
+        animation: fadeIn 0.4s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes slideIn {
+        from { transform: translateX(-10px); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+      }
+
+      @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+      }
+
+      @keyframes glow {
+        0% { box-shadow: 0 0 5px rgba(255, 140, 0, 0.5); }
+        50% { box-shadow: 0 0 20px rgba(255, 140, 0, 0.8); }
+        100% { box-shadow: 0 0 5px rgba(255, 140, 0, 0.5); }
       }
 
       .header {
         text-align: center;
-        margin-bottom: 16px;
+        margin-bottom: 20px;
+        position: relative;
+        animation: slideIn 0.5s ease-out 0.1s both;
       }
 
       .header h1 {
         margin: 0;
-        font-size: 18px;
-        font-weight: 600;
+        font-size: 20px;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        background: linear-gradient(45deg, #ffffff, #ffeb3b);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
       }
 
-      .header p {
-        margin: 4px 0 0 0;
-        font-size: 12px;
-        opacity: 0.8;
+      .toggle-btn {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+        border: none;
+        padding: 6px 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 600;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      .toggle-btn:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: scale(1.1);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+      .toggle-btn:active {
+        background: rgba(255, 255, 255, 0.25);
+        transform: scale(.99);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       }
 
       .stats {
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
-        padding: 12px;
-        margin-bottom: 16px;
+        background: rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 18px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        animation: slideIn 0.5s ease-out 0.2s both;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .stats:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
       }
 
       .stat-item {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 6px;
+        margin-bottom: 8px;
         font-size: 14px;
+        transition: transform 0.2s ease;
+      }
+
+      .stat-item:hover {
+        transform: translateX(5px);
       }
 
       .stat-item:last-child {
@@ -51,75 +116,235 @@
       }
 
       .stat-value {
+        font-weight: 700;
+        color: #ffeb3b;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+      }
+
+      .settings-section {
+        background: rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 18px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        animation: slideIn 0.5s ease-out 0.3s both;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .settings-section:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      .setting-item {
+        margin-bottom: 12px;
+      }
+
+      .setting-item:last-child {
+        margin-bottom: 0;
+      }
+
+      .setting-label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
+        margin-bottom: 10px;
         font-weight: 600;
+      }
+
+      .similarity-value {
+        background: linear-gradient(45deg, rgba(255, 140, 0, 0.8), rgba(255, 235, 59, 0.8));
+        padding: 4px 10px;
+        border-radius: 16px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #000;
+        text-shadow: none;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+      }
+
+      .similarity-value:hover {
+        animation: pulse 0.6s ease-in-out;
+      }
+
+      .slider {
+        width: 100%;
+        height: 6px;
+        border-radius: 3px;
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 140, 0, 0.3));
+        outline: none;
+        appearance: none;
+        transition: all 0.3s ease;
+      }
+
+      .slider:hover {
+        height: 8px;
+        animation: glow 2s infinite;
+      }
+
+      .slider::-webkit-slider-thumb {
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #ff8c00, #ffeb3b);
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+      }
+
+      .slider::-webkit-slider-thumb:hover {
+        transform: scale(1.2);
+        box-shadow: 0 6px 12px rgba(255, 140, 0, 0.4);
       }
 
       .actions {
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 10px;
+        animation: slideIn 0.5s ease-out 0.4s both;
       }
 
       .btn {
-        background: rgba(255, 255, 255, 0.9);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
         color: #2d3748;
         border: none;
-        padding: 10px 16px;
-        border-radius: 6px;
+        padding: 12px 18px;
+        border-radius: 10px;
         cursor: pointer;
-        font-size: 13px;
-        font-weight: 500;
-        transition: all 0.2s;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        position: relative;
+        overflow: hidden;
       }
 
+      .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 140, 0, 0.3), transparent);
+        transition: left 0.5s ease;
+      }
+
+      .btn:hover::before {
+        left: 100%;
+      }
+      
       .btn:hover {
-        background: white;
-        transform: translateY(-1px);
+        transform: scale(1.1px);
+        background: linear-gradient(135deg, #ffffff, rgba(255, 235, 59, 0.1));
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
       }
 
-      .btn-secondary {
-        background: rgba(255, 255, 255, 0.2);
-        color: white;
-      }
-
-      .btn-secondary:hover {
-        background: rgba(255, 255, 255, 0.3);
-      }
-
-      .footer {
-        text-align: center;
-        margin-top: 16px;
-        font-size: 11px;
-        opacity: 0.7;
+      .btn:active {
+        transform: scale(.99px);
       }
 
       .status {
-        padding: 8px;
-        border-radius: 4px;
-        margin-bottom: 12px;
-        font-size: 12px;
+        padding: 10px 14px;
+        border-radius: 10px;
+        margin-bottom: 16px;
+        font-size: 13px;
         text-align: center;
+        min-height: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+        animation: slideIn 0.5s ease-out both;
       }
 
-      .status.success {
-        background: rgba(72, 187, 120, 0.2);
+      .status.running {
+        background: linear-gradient(135deg, rgba(72, 187, 120, 0.2), rgba(72, 187, 120, 0.1));
         color: #68d391;
       }
 
+      .status.success {
+        background: linear-gradient(135deg, rgba(72, 187, 120, 0.3), rgba(72, 187, 120, 0.2));
+        color: #48bb78;
+        transform: scale(1.05);
+      }
+
       .status.error {
-        background: rgba(245, 101, 101, 0.2);
-        color: #fc8181;
+        background: linear-gradient(135deg, rgba(245, 101, 101, 0.3), rgba(245, 101, 101, 0.2));
+        color: #f56565;
+        animation: shake 0.5s ease-in-out;
+      }
+
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+      }
+
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #ff8c00, #ffeb3b);
+        border-radius: 3px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, #ffeb3b, #ff8c00);
+      }
+
+      .loading {
+        animation: pulse 1.5s ease-in-out infinite;
+        opacity: 0.7;
+      }
+
+      .stats, .settings-section {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .stats::before, .settings-section::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(45deg, transparent, rgba(255, 140, 0, 0.1), transparent);
+        border-radius: 14px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: -1;
+      }
+
+      .stats:hover::before, .settings-section:hover::before {
+        opacity: 1;
       }
     </style>
   </head>
   <body>
     <div class="header">
-      <h1>🔗 LeetCode Helper</h1>
-      <p>Find matching problems instantly</p>
+      <button class="toggle-btn" id="toggleBtn">👁️</button>
+      <h1>🔗TUF-to-LC</h1>
     </div>
 
-    <div id="status" class="status" style="display: none"></div>
-
+    <div id="status" class="status running">🟢 Running</div>
+    
     <div class="stats">
       <div class="stat-item">
         <span>Problems Loaded:</span>
@@ -129,90 +354,30 @@
         <span>Current Page:</span>
         <span class="stat-value" id="currentPage">Analyzing...</span>
       </div>
-      <div class="stat-item">
-        <span>Matches Found:</span>
-        <span class="stat-value" id="matchCount">-</span>
+    </div>
+    
+    <div class="settings-section">
+      <div class="setting-item">
+        <div class="setting-label">
+          <span>Similarity Grade</span>
+          <span class="similarity-value" id="similarityValue">0.4</span>
+        </div>
+        <input
+        type="range"
+        min="0.1"
+        max="1.0"
+        step="0.1"
+        value="0.4"
+        id="similaritySlider"
+        class="slider"
+        />
       </div>
     </div>
-
+    
     <div class="actions">
       <button class="btn" id="refreshBtn">🔄 Refresh Analysis</button>
-      <button class="btn btn-secondary" id="toggleBtn">
-        👁️ Toggle Visibility
-      </button>
-      <button class="btn btn-secondary" id="settingsBtn">⚙️ Settings</button>
     </div>
-
-    <div class="footer">
-      <p>
-        Automatically detects coding problems and provides direct links to
-        LeetCode
-      </p>
-    </div>
-
-    <div
-      id="settingsModal"
-      style="
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.4);
-        z-index: 10000;
-        align-items: center;
-        justify-content: center;
-      "
-    >
-      <div
-        style="
-          background: white;
-          color: #222;
-          border-radius: 10px;
-          padding: 24px;
-          min-width: 300px;
-          max-width: 90vw;
-          box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
-          position: relative;
-        "
-      >
-        <button
-          id="closeSettings"
-          style="
-            position: absolute;
-            top: 8px;
-            right: 12px;
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-          "
-        >
-          ×
-        </button>
-        <h2 style="margin-top: 0">Settings</h2>
-        <div style="margin: 18px 0">
-          <label for="similaritySlider" style="font-size: 14px"
-            >Similarity Threshold: <span id="similarityValue">0.4</span></label
-          >
-          <input
-            type="range"
-            min="0.1"
-            max="1.0"
-            step="0.1"
-            value="0.4"
-            id="similaritySlider"
-            style="width: 100%"
-          />
-          <div style="font-size: 12px; color: #666; margin-top: 4px">
-            Lower values find more (looser) matches, higher values require more
-            exact matches.
-          </div>
-        </div>
-      </div>
-    </div>
-
+    
     <script src="popup.js"></script>
   </body>
 </html>
