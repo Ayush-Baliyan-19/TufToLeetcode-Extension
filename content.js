@@ -1,6 +1,6 @@
 let leetcodeData = [];
 let buttonContainer = null;
-let isSearching = false; 
+let isSearching = false;
 
 async function loadLeetCodeData() {
     try {
@@ -43,20 +43,20 @@ if (typeof localStorage !== 'undefined') {
 
 function findMatchingProblems(pageText) {
     console.log('Finding matches for:', pageText.substring(0, 100) + '...');
-    
+
     const matches = [];
     for (let i = 0; i < leetcodeData.length; i++) {
         const problem = leetcodeData[i];
-        
+
         const titleSimilarity = calculateSimilarity(pageText, problem.title);
         let descSimilarity = 0;
-        
+
         if (problem.description && problem.description.trim()) {
             descSimilarity = calculateSimilarity(pageText, problem.description);
         }
-        
+
         const combinedScore = (descSimilarity * 1.5) + (titleSimilarity * 0.8);
-        
+
         if (combinedScore >= SIMILARITY_THRESHOLD || titleSimilarity >= SIMILARITY_THRESHOLD || descSimilarity >= SIMILARITY_THRESHOLD) {
             matches.push({
                 ...problem,
@@ -68,7 +68,7 @@ function findMatchingProblems(pageText) {
             });
         }
     }
-    
+
     matches.sort((a, b) => b.combinedScore - a.combinedScore);
 
     const uniqueMatches = [];
@@ -87,26 +87,24 @@ function findMatchingProblems(pageText) {
             seenTitles.add(normalizedTitle);
         }
     }
-    
+
     console.log('Found', uniqueMatches.length, 'unique matches');
     return uniqueMatches.slice(0, 20);
 }
 
 function getProblemTitle() {
-    const titleElement = document.querySelector(
-        '.text-2xl.font-bold.text-new_primary.dark\\:text-new_dark_primary'
-    );
+    const titleElement = document.querySelector('h1');
     return titleElement ? titleElement.textContent.replace(/🔍|<svg.*?<\/svg>/g, '').trim() : null;
 }
 
 function getTUFProblemContent() {
     let content = '';
-    
+
     const title = getProblemTitle();
     if (title) {
         content += title + ' ';
     }
-    
+
     const descriptionElement = document.querySelector('.mt-6.w-full.text-new_secondary.text-\\[14px\\].dark\\:text-zinc-200');
     if (descriptionElement) {
         const paragraphs = descriptionElement.querySelectorAll('p');
@@ -114,12 +112,12 @@ function getTUFProblemContent() {
             .map(p => p.textContent.trim())
             .filter(text => text.length > 0)
             .join(' ');
-        
+
         if (descText) {
             content += descText + ' ';
         }
     }
-    
+
     const constraintsContainer = document.querySelector('.mt-4.flex.flex-col.gap-y-2.mb-24');
     if (constraintsContainer) {
         const constraintsList = constraintsContainer.querySelector('ul');
@@ -127,13 +125,13 @@ function getTUFProblemContent() {
             const constraints = Array.from(constraintsList.querySelectorAll('li'))
                 .map(li => li.textContent.trim())
                 .join(' ');
-            
+
             if (constraints) {
                 content += constraints;
             }
         }
     }
-    
+
     const finalContent = content.trim();
     console.log('TUF Content extracted:', finalContent.substring(0, 200) + '...');
     return finalContent;
@@ -181,22 +179,22 @@ function showLoadingScreen() {
 function createLeetCodeButton(problem) {
     const button = document.createElement('button');
     button.className = 'leetcode-helper-btn';
-    
+
     if (problem.isPremium) {
         button.classList.add('premium-problem');
     }
-    
+
     const sqlBadge = problem.is_sql ? '<span class="sql-badge">SQL</span>' : '';
     const premiumBadge = problem.isPremium ? '<span class="premium-badge">PREMIUM</span>' : '';
-    
+
     const titlePercent = Math.round(problem.titleMatch * 100);
     const descPercent = Math.round(problem.descMatch * 100);
     const totalPercent = Math.round(problem.combinedScore * 100);
-    
-    const topicTags = problem.topics.slice(0, 4).map(topic => 
+
+    const topicTags = problem.topics.slice(0, 4).map(topic =>
         `<span class="topic-tag">${topic}</span>`
     ).join('');
-    
+
     button.innerHTML = `
     <div class="btn-content">
       <div class="btn-title">${problem.title} ${sqlBadge}</div>
@@ -221,12 +219,12 @@ function createLeetCodeButton(problem) {
 
 function updateUI(matches) {
     const container = createButtonContainer();
-    
+
     const content = document.createElement('div');
     content.className = 'results-content';
-    
+
     container.innerHTML = '';
-    
+
     if (matches.length === 0) {
         container.innerHTML = `
             <div class="leetcode-helper-header">
@@ -243,7 +241,7 @@ function updateUI(matches) {
         container.style.display = 'block';
         return;
     }
-    
+
     container.style.display = 'block';
     const header = document.createElement('div');
     header.className = 'leetcode-helper-header';
@@ -251,10 +249,10 @@ function updateUI(matches) {
     <span>Found Match${matches.length > 1 ? 'es' : ''} on Leetcode!</span>
     <button class="close-btn" onclick="this.parentElement.parentElement.style.display='none'">×</button>
   `;
-    
+
     container.appendChild(header);
     container.appendChild(content);
-    
+
     matches.forEach(problem => {
         const button = createLeetCodeButton(problem);
         content.appendChild(button);
@@ -268,7 +266,7 @@ function createTitleButton() {
     titleButton.className = 'leetcode-helper-title-btn';
     titleButton.style.marginLeft = '8px';
     titleButton.style.cursor = 'pointer';
-    
+
     // Create SVG search icon
     const svgNS = 'http://www.w3.org/2000/svg';
     const svg = document.createElementNS(svgNS, 'svg');
@@ -280,42 +278,42 @@ function createTitleButton() {
     svg.setAttribute('stroke-width', '2');
     svg.setAttribute('stroke-linecap', 'round');
     svg.setAttribute('stroke-linejoin', 'round');
-    
+
     const circle = document.createElementNS(svgNS, 'circle');
     circle.setAttribute('cx', '11');
     circle.setAttribute('cy', '11');
     circle.setAttribute('r', '8');
     svg.appendChild(circle);
-    
+
     const line = document.createElementNS(svgNS, 'line');
     line.setAttribute('x1', '21');
     line.setAttribute('y1', '21');
     line.setAttribute('x2', '16.65');
     line.setAttribute('y2', '16.65');
     svg.appendChild(line);
-    
+
     titleButton.appendChild(svg);
     titleButton.title = 'Find similar LeetCode problems (description-prioritized matching)';
 
     titleButton.addEventListener('click', async (e) => {
         e.stopPropagation();
-        
+
         if (isSearching) return;
-        
+
         isSearching = true;
         titleButton.style.opacity = '0.6';
         titleButton.style.pointerEvents = 'none';
-        
+
         try {
             showLoadingScreen();
-            
+
             const content = getTUFProblemContent();
             if (content) {
                 await new Promise(resolve => setTimeout(resolve, 800));
-                
+
                 const matches = await findMatchingProblems(content);
                 updateUI(matches);
-                
+
                 const rect = titleButton.getBoundingClientRect();
                 if (buttonContainer) {
                     buttonContainer.style.top = `${rect.bottom + window.scrollY + 5}px`;
@@ -344,9 +342,7 @@ if (typeof localStorage !== 'undefined') {
 }
 
 function removeTitleButton() {
-    const titleElement = document.querySelector(
-        '.text-2xl.font-bold.text-new_primary.dark\\:text-new_dark_primary'
-    );
+    const titleElement = document.querySelector('h1');
     if (titleElement) {
         const btn = titleElement.querySelector('.leetcode-helper-title-btn');
         if (btn) btn.remove();
@@ -369,9 +365,7 @@ function injectTitleButton() {
         hidePopup();
         return;
     }
-    const titleElement = document.querySelector(
-        '.text-2xl.font-bold.text-new_primary.dark\\:text-new_dark_primary'
-    );
+    const titleElement = document.querySelector('h1');
     if (titleElement && !titleElement.querySelector('.leetcode-helper-title-btn')) {
         const titleButton = createTitleButton();
         titleElement.appendChild(titleButton);
@@ -382,9 +376,9 @@ function handleUrlChange() {
     const newUrl = window.location.href;
     if (newUrl !== currentUrl) {
         currentUrl = newUrl;
-        
+
         closeSearchResults();
-        
+
         setTimeout(() => {
             injectTitleButton();
         }, 1000);
@@ -453,22 +447,22 @@ async function init() {
         mutations.forEach(mutation => {
             if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
                 for (let node of mutation.addedNodes) {
-                    if (node.nodeType === Node.ELEMENT_NODE && 
-                        (node.classList?.contains('mt-6') || 
-                         node.classList?.contains('text-2xl') ||
-                         node.tagName === 'MAIN' ||
-                         node.tagName === 'SECTION')) {
+                    if (node.nodeType === Node.ELEMENT_NODE &&
+                        (node.classList?.contains('mt-6') ||
+                            node.classList?.contains('text-2xl') ||
+                            node.tagName === 'MAIN' ||
+                            node.tagName === 'SECTION')) {
                         significantChange = true;
                         break;
                     }
                 }
             }
         });
-        
+
         if (significantChange) {
             closeSearchResults();
         }
-        
+
         debouncedAnalyze();
     });
 
