@@ -1,0 +1,16 @@
+{
+  "name": "tuf-to-leetcode",
+  "version": "1.0.0",
+  "description": "Chrome extension to find LeetCode problems from TUF",
+  "type": "module",
+  "scripts": {
+    "scrape": "node leetcode-scraper.js"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
+
